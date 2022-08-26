@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cqz.dao.WordDao">
+    <select id="findWord" resultType="word" parameterType="string">
+        select *  from words where word=#{word}
+    </select>
+
+    <select id="findSortWord" resultType="word">
+        select *  from words
+        where ${level}=1
+        limit #{start},#{end}
+    </select>
+
+
+    <select id="findSortWord2" resultType="word">
+
+
+        select newwordlist.word,words.translation
+        from newwordlist
+                 join words
+                      on newwordlist.word=words.word
+        where userid = #{userid}
+            limit #{start},#{end}
+    </select>
+
+
+    <update id="resetUserPlan">
+        update user set plan='0' where plan='1' and userid=#{userid}
+    </update>
+
+
+
+
+
+
+
+
+
+
+
+    <update id="setWord" parameterType="string">
+        update enwords translation = #{translation} where word=#{word}
+    </update>
+
+    <select id="findAll" resultType="word">
+        select * from enwords
+    </select>
+
+    <insert id="insert">
+        insert into words(word,translation)value(#{word},#{translation})
+    </insert>
+
+    <select id="getWord" resultType="word">
+        select * from userword where word=#{word} and userid=#{userid}
+    </select>
+
+    <insert id="saveWord" parameterType="userword">
+        insert into userword(userid,word,status,date,way,level) value(#{userid},#{word},#{status},#{date},#{way},#{level})
+    </insert>
+
+    <select id="getTodayPlan" resultType="word">
+        select userword.word,words.translation
+        from userword
+                 join words
+                      on userword.word=words.word
+        where userid = #{userid} and date = #{date}
+    </select>
+
+
+    <delete id="deleteWord" >
+        delete from userword where userid = #{userid} and word = #{word}
+    </delete>
+
+    <delete id="deletecollectword" >
+        delete from newwordlist where userid = #{userid} and word = #{word}
+    </delete>
+
+
+    <select id="getSortId" resultType="_int">
+        select id from sort where level = #{level}
+    </select>
+
+    <select id="findSortCount" resultType="_int">
+        select sortcount from sort where id=#{id}
+    </select>
+
+    <select id="findSortCount2" resultType="_int">
+        select count(*) from newwordlist where userid=#{id}
+    </select>
+
+    <select id="findcount" resultType="_int">
+        select count(*) from userword where userid=#{userid} and date=#{date}
+    </select>
+
+    <update id="setcount" >
+        update user set count=#{count} where userid=#{userid}
+    </update>
+
+    <update id="settotal" >
+        update user set total=#{total} where userid=#{userid}
+    </update>
+
+
+    <select id="getalreadycount" resultType="_int">
+        select count(*) from userword where userid=#{userid}
+    </select>
+
+    <select id="getSortName" resultType="string">
+        select sortname from sort where level=#{level}
+    </select>
+
+    <update id="setState">
+        update user set state=1 where userid=#{userid}
+    </update>
+
+
+    <select id="getState" resultType="_int">
+        select state from  user where userid=#{userid}
+    </select>
+
+
+    <select id="getData" resultType="word">
+        select userword.word,words.translation
+        from userword
+                 join words
+                      on userword.word=words.word
+        where userid=#{userid} and status='0'
+    </select>
+
+    <select id="continueStudy">
+        select * from userword where userid=#{userid}
+    </select>
+
+    <select id="getInfo" resultType="userstudyinfo">
+        select way,level from user where userid=#{userid}
+    </select>
+
+    <select id="getSystemData" resultType="word">
+        select * from words
+            where ${level}=1
+            limit #{start},#{end}
+    </select>
+
+    <select id="getCount" resultType="_int">
+        select count from user where userid = #{userid}
+    </select>
+
+    <select id="gettotal" resultType="_int">
+        select total from user where userid = #{userid}
+    </select>
+
+
+    <update id="setStatus">
+        update userword set status='1' where userid=#{userid} and word=#{word}
+    </update>
+
+
+    <select id="getLastTime" parameterType="_int" resultType="_int">
+        select count(*) from userword where status='0' and userid=#{userid}
+    </select>
+
+    <select id="getIncomplete" resultType="_int">
+        select count(*) from userword where status='0' and userid=#{userid}
+    </select>
+
+    <update id="setuserplan">
+        update user set plan='1' where userid=#{userid}
+    </update>
+
+    <select id="getuserplan" resultType="_int">
+        select plan from user where userid=#{userid}
+    </select>
+
+    <update id="resetPlan" >
+        update user set plan='0' where plan='1'
+    </update>
+    <select id="findAllSortName" resultType="sort">
+        select sortname,sortcount,level from sort
+    </select>
+
+    <update id="resetStudy">
+        update user set state='0',way=null,count=0,level=null,total='0',plan='0' where userid=#{userid}
+    </update>
+    <select id="findstudycount" resultType="_int">
+        select count(*) from userword where level=#{level} and userid=#{userid} and status='1'
+    </select>
+
+    <delete id="deleteuserword">
+        delete from userword where userid = #{userid} and level=#{level}
+    </delete>
+
+    <select id="getSortCount" resultType="_int">
+        select sortcount from sort where level=#{level}
+    </select>
+
+    <update id="setisfinish">
+        update  user set ${level}='1' where userid = #{userid}
+    </update>
+
+
+    <select id="getisfinish" resultType="_int">
+        select ${level} from user where userid = #{userid}
+    </select>
+
+
+    <insert id="addnewwordlist">
+        insert into newwordlist values(#{userid},#{word},#{level})
+    </insert>
+
+    <select id="getcollectcount" resultType="_int">
+        select count(*) from newwordlist
+    </select>
+
+    <select id="findCollectWord" resultType="word">
+        select  newwordlist.word,words.translation
+        from newwordlist
+                 join words
+                      on newwordlist.word=words.word
+        where userid = #{userid}
+        limit #{start},#{end}
+    </select>
+
+    <select id="getReviewWord" resultType="word">
+        select * from userword where userid=#{userid} and review='1'
+    </select>
+
+    <select id="isreview" resultType="_int">
+        select review from userword where word=#{word} and userid=#{userid}
+    </select>
+    <update id="setreview">
+        update userword set review=#{review} where  userid=#{userid} and  word=#{word}
+    </update>
+    <select id="getreview" resultType="_int">
+        select count(*) from userword where userid=#{userid} and review='1'
+    </select>
+    <update id="setdimword">
+        update userword set vague='2' where userid=#{userid} and word=#{word}
+    </update>
+    <update id="setincognizancword">
+        update userword set vague='3' where userid=#{userid} and word=#{word}
+    </update>
+    <select id="getVague" resultType="_int">
+        select count(*) from userword where userid=#{userid} and vague!='0'
+    </select>
+
+    <select id="getVaguelist" resultType="word">
+        select * from userword where userid=#{userid} and vague!='0'
+    </select>
+
+    <update id="setVague">
+        update userword set vague=#{vague} where  userid=#{userid} and word=#{word}
+    </update>
+
+
+    <select id="getIntVague" resultType="_int">
+        select vague from userword where  userid=#{userid} and word=#{word}
+    </select>
+</mapper>

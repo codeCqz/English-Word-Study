@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cqz.dao.UserDao">
+    <select id="findUser" resultType="user" parameterType="string">
+        select *  from user where email=#{email} and password=#{password}
+    </select>
+
+    <insert id="addUser" parameterType="user">
+        insert into user(userid,username,password,email) values(#{userid},#{username},#{password},#{email})
+    </insert>
+
+    <update id="setUserState">
+        update user set state=1,way=#{way},count=#{count},level=#{level} where userid = #{userid}
+    </update>
+
+
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username},password=#{password},email=#{email} where userid = #{userid}
+    </update>
+
+    <select id="getuser" resultType="user">
+        select username,password,email from user where userid=#{userid}
+    </select>
+</mapper>
